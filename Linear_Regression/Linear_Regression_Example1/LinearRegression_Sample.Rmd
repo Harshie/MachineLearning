@@ -1,0 +1,102 @@
+---
+title: "Linear Regression Example"
+author: "Harshad Kumar Elangovan"
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is a practice sheet for a Linear Regression algorithm using a simple dataset.
+
+Exercise:
+In exercise folder (same level as this notebook on github) there is hiring.csv. This file contains hiring statics for a firm such as experience of candidate, his written test score and personal interview score. Based on these 3 factors, HR will decide the salary. Given this data, you need to build a machine learning model for HR department that can help them decide salaries for future candidates. Using this predict salaries for following candidates,
+
+2 yr experience, 9 test score, 6 interview score
+
+12 yr experience, 10 test score, 10 interview score
+
+```{r load_data}
+hiring <- read.csv("hiring.csv",header = T)
+
+head(hiring)
+
+#Updating the field names
+colnames(hiring) <- c('experience','test_score_of_10','interview_score_of_10','salary')
+
+head(hiring)
+
+```
+
+Once the data is loaded, we will have to check the null values of the variables.
+
+```{r nullvalues}
+#checking for null values
+hiring$experience==""
+
+```
+
+Since the experience is null. We can assume that the candidate has no experience.
+
+```{r experienceNull}
+for (i in 1:length(hiring$experience)) {
+  print(hiring$experience[i])
+  if(hiring$experience[i]==""){
+  hiring$experience[i]='zero'
+  }
+  
+}
+
+
+```
+
+The values of experience are in string format. We will have to update them to integer format. Since, the dataset is too small. I'm updating them manually. But if there are many rows, then a function can be created for changing to integer. One of the method is shown in the below link </br>
+https://community.rstudio.com/t/convert-written-numbers-to-integers/10302/2
+
+```{r exp}
+experience1<- c(0,0,5,2,7,3,10,11)
+hiring$experienceNew <- experience1
+
+# Checking null value of test score
+is.na(hiring$test_score_of_10)
+index1 = which(is.na(hiring$test_score_of_10))
+  
+```
+
+Since there are only few rows in dataset, we can fill an average value instead of removing the row,using median value.
+
+```{r median}
+medianval <- median(hiring$test_score_of_10,na.rm = T)
+hiring$test_score_of_10[index1] <- medianval
+hiring
+```
+Now the data is set. We will carry on with the fitting the model.
+
+```{r lm}
+fit<- lm(salary~experienceNew+test_score_of_10+interview_score_of_10,data = hiring)
+summary(fit)
+```
+From the summary, we can see that the fit has Adjusted R-squared value to be 0.93 which is quite high. So, we can see that this fit is a good fit.
+From the coefficients, the experience of candidate has higher significance(99.9%) to the salary. Interview score is also significant(95%) for arriving to the salary. The test score isn't that significant for deciding the salary of the employee.
+
+Now, we can use this fit for predicting the salary of the candidate with parameters : 2 yr experience, 9 test score, 6 interview score.
+
+```{r pred1}
+#2 yr experience, 9 test score, 6 interview score.
+# Predicting the intervals
+predict(fit,data.frame(experienceNew=2,test_score_of_10=9,interview_score_of_10=6),interval = "confidence")
+
+# Predicting the salary
+salary1 <- predict(fit,data.frame(experienceNew=2,test_score_of_10=9,interview_score_of_10=6))
+salary1
+
+# 12 yr experience, 10 test score, 10 interview score
+predict(fit,data.frame(experienceNew=12,test_score_of_10=10,interview_score_of_10=10),interval = "confidence")
+salary2 <- predict(fit,data.frame(experienceNew=12,test_score_of_10=10,interview_score_of_10=10))
+salary2
+```
+
+So, from the predicted value, we can see that a candidate with 2 yr experience, 9 test score, 6 interview score is estimated to provide salary around 53206.
+For candidate with 12 yr experience, 10 test score, 10 interview score is expected to get the salary around 92002.
