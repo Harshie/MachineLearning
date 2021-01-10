@@ -65,11 +65,12 @@ index1 = which(is.na(hiring$test_score_of_10))
   
 ```
 
-Since there are only few rows in dataset, we can fill an average value instead of removing the row,using median value.
+Since there are only few rows in dataset, we can fill an average value instead of removing the row,using mean value.
 
 ```{r median}
-medianval <- median(hiring$test_score_of_10,na.rm = T)
-hiring$test_score_of_10[index1] <- medianval
+# medianval <- median(hiring$test_score_of_10,na.rm = T)
+meanval <- as.integer(mean(hiring$test_score_of_10,na.rm = T))
+hiring$test_score_of_10[index1] <- meanval
 hiring
 ```
 Now the data is set. We will carry on with the fitting the model.
@@ -78,8 +79,8 @@ Now the data is set. We will carry on with the fitting the model.
 fit<- lm(salary~experienceNew+test_score_of_10+interview_score_of_10,data = hiring)
 summary(fit)
 ```
-From the summary, we can see that the fit has Adjusted R-squared value to be 0.93 which is quite high. So, we can see that this fit is a good fit.
-From the coefficients, the experience of candidate has higher significance(99.9%) to the salary. Interview score is also significant(95%) for arriving to the salary. The test score isn't that significant for deciding the salary of the employee.
+From the summary, we can see that the fit has Adjusted R-squared value to be 0.96 which is quite high. So, we can see that this fit is a good fit.
+From the coefficients, the experience of candidate has higher significance(99.9%) to the salary. Interview score & test_score_of_10 are also significant(95%) for deciding the salary of the employee.
 
 Now, we can use this fit for predicting the salary of the candidate with parameters : 2 yr experience, 9 test score, 6 interview score.
 
@@ -98,5 +99,5 @@ salary2 <- predict(fit,data.frame(experienceNew=12,test_score_of_10=10,interview
 salary2
 ```
 
-So, from the predicted value, we can see that a candidate with 2 yr experience, 9 test score, 6 interview score is estimated to provide salary around 53206.
-For candidate with 12 yr experience, 10 test score, 10 interview score is expected to get the salary around 92002.
+So, from the predicted value, we can see that a candidate with 2 yr experience, 9 test score, 6 interview score is estimated to provide salary around 53713.87.
+For candidate with 12 yr experience, 10 test score, 10 interview score is expected to get the salary around 93747.8.
