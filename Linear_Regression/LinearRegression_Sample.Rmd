@@ -1,0 +1,56 @@
+---
+title: "Linear_Regression"
+author: "Harshad Kumar Elangovan"
+date: "10/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is a practice sheet for a Linear Regression algorithm using a simple dataset.
+
+```{r load_data}
+hiring <- read.csv("hiring.csv",header = T)
+
+head(hiring)
+
+#Updating the field names
+colnames(hiring) <- c('experience','test_score_of_10','interview_score_of_10','salary')
+
+head(hiring)
+
+```
+
+Once the data is loaded, we will have to check the null values of the variables.
+
+```{r nullvalues}
+#checking for null values
+hiring$experience==""
+
+```
+
+Since the experience is null. We can assume that the candidate has no experience.
+
+```{r experienceNull}
+for (i in 1:length(hiring$experience)) {
+  print(hiring$experience[i])
+  if(hiring$experience[i]==""){
+  hiring$experience[i]='zero'
+  }
+  
+}
+
+
+```
+
+The values of experience are in string format. We will have to update them to integer format. Since, the dataset is too small. I'm updating them manually. But if there are many rows, then a function can be created for changing to integer. One of the method is shown in the below link </br>
+https://community.rstudio.com/t/convert-written-numbers-to-integers/10302/2
+
+```{r exp}
+for (i in 1:length(hiring$experience)) {
+  
+  
+}
+```
